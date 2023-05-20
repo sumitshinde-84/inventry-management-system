@@ -35,6 +35,9 @@ router.get("/product/:id", product_controller.product_detail);
 // GET request for list of all product items.
 router.get("/products", product_controller.product_list);
 
+router.get("/products/send", product_controller.product_list_send_json);
+
+
 /// CATEGORY ROUTES ///
 
 // GET request for creating category. NOTE This must come before route for id (i.e. display category).
@@ -60,5 +63,8 @@ router.get("/category/:id", category_controller.category_detail);
 
 // GET request for list of all categorys.
 router.get("/categories", category_controller.category_list);
+
+router.get("/categories/send", category_controller.category_list_send_json);
+
 
 module.exports = router;

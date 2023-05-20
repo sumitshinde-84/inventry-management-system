@@ -39,9 +39,41 @@ exports.product_list = asyncHandler(async (req, res, next) => {
  })
 });
 
+exports.product_list_send_json = asyncHandler(async (req, res, next) => {
+    const allProducts = await Product.find({}, "name price")
+    .sort({ title: 1 })
+    .populate("category")
+    .exec();
+   
+    if(allProducts==null){
+       const err = new Error('products are not found')
+       err.status= 404
+       next(err)
+    }
+    
+    const responceData = {
+       
+        products:allProducts,
+       
+     }
+    
+    res.json(responceData)
+   });
+
 // Display detail page for a specific product.
 exports.product_detail = asyncHandler(async (req, res, next) => {
-  res.send(`NOT IMPLEMENTED: product detail: ${req.params.id}`);
+  const product =  await Product.findById(req.params.id).populate('category').exec()
+  
+  if(product === null){
+    const err = new  Error('item not found');
+    err.status=404
+    next(err)
+  }
+
+  res.render('layout',{
+    content:'product_detail',
+    product:product
+  })
 });
 
 // Display product create form on GET.
