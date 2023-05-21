@@ -78,17 +78,90 @@ exports.product_detail = asyncHandler(async (req, res, next) => {
 
 // Display product create form on GET.
 exports.product_create_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: product create GET");
-});
-
-// Handle product create on POST.
-exports.product_create_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: product create POST");
-});
-
+    try {
+      const categories = await Category.find().exec();
+  
+      res.render("layout", {
+        title: "Create Product",
+        content: "product_form",
+        product: {}, // Pass an empty product object to initialize the form fields
+        categories: categories, // Pass the categories to the template
+        errors: [], // Initialize the errors array to avoid errors in the template
+      });
+    } catch (err) {
+      next(err);
+    }
+  });
+  
+  // Handle product create on POST.
+  exports.product_create_post = [
+    // Validate and sanitize fields.
+    body("name")
+      .trim()
+      .isLength({ min: 1 })
+      .escape()
+      .withMessage("Product name must be specified.")
+      .withMessage("Product name has non-alphanumeric characters."),
+    body("description")
+      .trim()
+      .isLength({ min: 1 })
+      .escape()
+      .withMessage("Description must be specified."),
+    body("units").isNumeric().withMessage("Invalid units"),
+    body("price").isNumeric().withMessage("Invalid price"),
+    body("category")
+      .trim()
+      .isLength({ min: 1 })
+      .escape()
+      .withMessage("Category must be specified."),
+  
+    // Process request after validation and sanitization.
+    asyncHandler(async (req, res, next) => {
+      try {
+        // Extract the validation errors from the request.
+        const errors = validationResult(req);
+  
+        // Create a Product object with escaped and trimmed data.
+        const product = new Product({
+          name: req.body.name,
+          description: req.body.description,
+          units: req.body.units,
+          price: req.body.price,
+          category: req.body.category,
+        });
+  
+        if (!errors.isEmpty()) {
+          const categories = await Category.find().exec();
+  
+          // There are errors. Render the form again with sanitized values and error messages.
+          res.render("layout", {
+            title: "Create Product",
+            content: "product_form",
+            product: product,
+            categories: categories,
+            errors: errors.array(),
+          });
+          return;
+        }
+  
+        // Save the product.
+        await product.save();
+        // Redirect to the new product record.
+        res.redirect(product.url);
+      } catch (err) {
+        next(err);
+      }
+    }),
+  ];
+  
 // Display product delete form on GET.
 exports.product_delete_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: product delete GET");
+    const product = await Product.findById(req.params.id).find().exec()
+
+    if(product==null){
+        res.redirect('/catalog/categories')
+    }
+    res.render('')
 });
 
 // Handle product delete on POST.

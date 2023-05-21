@@ -1,0 +1,10 @@
+<div class="container">
+    <div class="indexDiv">
+        <h1><%=title%></h1>
+        <ul>
+            <%for(const category of categories){%>
+                <li><a href=<%=category.url%>><%=category.name%></a></li>
+                <%}%>
+        </ul>
+    </div>
+</div>

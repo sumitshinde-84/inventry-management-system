@@ -1,0 +1,25 @@
+<div class="container">
+    <div class="indexDiv">
+      <h1><%= category.name %></h1>
+  
+      <p><strong>Description:</strong> <%= category.description %></p>
+  
+      <div class="container">
+        <h4>Products</h4>
+        <hr>
+        <ul>
+          <% for (const product of products) { %>
+            <li>
+              <a href="<%= product.url %>">
+                <p><strong><%= product.name %></strong></p>
+              </a>
+              <p><%= product.description %></p>
+            </li>
+          <% } %>
+        </ul>
+        <hr>
+        <p><a href="<%= category.url + '/delete' %>">Delete category</a></p>
+      </div>
+    </div>
+  </div>
+  
