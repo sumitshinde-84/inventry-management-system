@@ -6,7 +6,7 @@ const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async (req, res, next) => {
   // Get details of books, book instances, authors and genre counts (in parallel)
-  const [numProduct, numCategory] = await Promise.all([
+  const [numCategory,numProduct ] = await Promise.all([
     Category.countDocuments({}).exec(),
     Product.countDocuments({}).exec(),
   ]);
@@ -161,20 +161,92 @@ exports.product_delete_get = asyncHandler(async (req, res, next) => {
     if(product==null){
         res.redirect('/catalog/categories')
     }
-    res.render('')
+    res.render('layout',{
+        content:'product_delete',
+        product:product
+    })
 });
 
 // Handle product delete on POST.
 exports.product_delete_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: product delete POST");
+    const product = await Product.findById(req.params.id).find().exec();
+
+    if(product==null){
+        res.redirect('/catalog/products')
+        return
+    }
+    await Product.findByIdAndRemove(req.params.id);
+    res.redirect('/catalog/products');
+
 });
 
 // Display product update form on GET.
 exports.product_update_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: product update GET");
+     const [product,categories] = await Promise.all([
+        Product.findById(req.params.id).exec(),
+        Category.find().find().exec()
+     ])
+
+     if (product === null) {
+        // No results.
+        const err = new Error("product not found");
+        err.status = 404;
+        return next(err);
+      }
+     res.render('layout',{
+        title: "Create Product",
+        content: "product_form",
+        product: product, 
+        categories: categories, 
+         
+     })
 });
 
 // Handle product update on POST.
 exports.product_update_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: product update POST");
+    body("name")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Product name must be specified.")
+    .withMessage("Product name has non-alphanumeric characters."),
+  body("description")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Description must be specified."),
+  body("units").isNumeric().withMessage("Invalid units"),
+  body("price").isNumeric().withMessage("Invalid price"),
+  body("category")
+    .trim()
+    .isLength({ min: 1 })
+    .escape()
+    .withMessage("Category must be specified.");
+
+  const errors = validationResult(req);
+
+  const product = new Product({
+    _id:req.params.id,
+    name: req.body.name,
+    description: req.body.description,
+    units: req.body.units,
+    price: req.body.price,
+    category: req.body.category,
+  });
+
+  if (!errors.isEmpty()) {
+    res.render("layout", {
+        title: "Create Product",
+        content: "product_form",
+        product: product,
+        categories: categories,
+        errors: errors.array(),
+    });
+    return;
+  } else {
+    // Data from form is valid. Update the record.
+    const theproduct = await Product.findByIdAndUpdate(req.params.id, product, {});
+    // Redirect to category detail page.
+    res.redirect(theproduct.url);
+  }
 });

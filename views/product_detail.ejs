@@ -4,6 +4,10 @@
       <p><strong>Category:</strong> <%= product.category.name %></p>
       <p><strong>Description:</strong> <%= product.description %></p>
       <p><strong>Price:</strong> <%= product.price %></p>
+      <hr>
+      <p><a href="<%= product.url + '/delete' %>">Delete product</a></p>
+      <hr>
+      <p><a href="<%= product.url + '/update' %>">Update product</a></p>
     </div>
   </div>
   

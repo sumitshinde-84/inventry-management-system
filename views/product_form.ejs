@@ -11,7 +11,7 @@
                 <label for="category">Category:</label>
                 <select id="category" class="form-control" name="category" required="true">
                     <% categories.forEach(function(category) { %>
-                        <% if (product && product.category && category._id.toString() === product.category._id.toString()) { %>
+                        <% if (product && product.category && category._id.toString() === product.category.toString()) { %>
                             <option value="<%= category._id %>" selected><%= category.name %></option>
                         <% } else { %>
                             <option value="<%= category._id %>"><%= category.name %></option>
