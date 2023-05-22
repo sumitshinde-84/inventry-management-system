@@ -1,18 +1,33 @@
-const Category = require("../models/category");
-const Product = require("../models/product");
+const Category = require("../model/category");
+const Product = require("../model/product");
+const multer = require("multer"); 
+const { v4: uuidv4 } = require('uuid');
 
+
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/images/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+
+const upload = multer({ storage: storage });
 const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async (req, res, next) => {
-  // Get details of books, book instances, authors and genre counts (in parallel)
+
   const [numCategory,numProduct ] = await Promise.all([
     Category.countDocuments({}).exec(),
     Product.countDocuments({}).exec(),
   ]);
 
   res.render("layout", {
-    title: "Inventory Home Page",
+    title: "Dashboard",
     content: "index",
     product_count: numProduct,
     category_count: numCategory,
@@ -21,7 +36,7 @@ exports.index = asyncHandler(async (req, res, next) => {
 
 // Display list of all products.
 exports.product_list = asyncHandler(async (req, res, next) => {
- const allProducts = await Product.find({}, "name price")
+ const allProducts = await Product.find({})
  .sort({ title: 1 })
  .populate("category")
  .exec();
@@ -40,7 +55,7 @@ exports.product_list = asyncHandler(async (req, res, next) => {
 });
 
 exports.product_list_send_json = asyncHandler(async (req, res, next) => {
-    const allProducts = await Product.find({}, "name price")
+    const allProducts = await Product.find()
     .sort({ title: 1 })
     .populate("category")
     .exec();
@@ -84,59 +99,48 @@ exports.product_create_get = asyncHandler(async (req, res, next) => {
       res.render("layout", {
         title: "Create Product",
         content: "product_form",
-        product: {}, // Pass an empty product object to initialize the form fields
-        categories: categories, // Pass the categories to the template
-        errors: [], // Initialize the errors array to avoid errors in the template
+        product: {}, 
+        categories: categories, 
+        errors: [],
       });
     } catch (err) {
       next(err);
     }
   });
   
-  // Handle product create on POST.
+ 
+
   exports.product_create_post = [
+   
+    upload.single('image'),
+  
     // Validate and sanitize fields.
-    body("name")
-      .trim()
-      .isLength({ min: 1 })
-      .escape()
-      .withMessage("Product name must be specified.")
-      .withMessage("Product name has non-alphanumeric characters."),
-    body("description")
-      .trim()
-      .isLength({ min: 1 })
-      .escape()
-      .withMessage("Description must be specified."),
-    body("units").isNumeric().withMessage("Invalid units"),
-    body("price").isNumeric().withMessage("Invalid price"),
-    body("category")
-      .trim()
-      .isLength({ min: 1 })
-      .escape()
-      .withMessage("Category must be specified."),
+    body('name').trim().isLength({ min: 1 }).escape().withMessage('Product name must be specified.'),
+    body('description').trim().isLength({ min: 1 }).escape().withMessage('Description must be specified.'),
+    body('units').isNumeric().withMessage('Invalid units'),
+    body('price').isNumeric().withMessage('Invalid price'),
+    body('category').trim().isLength({ min: 1 }).escape().withMessage('Category must be specified.'),
   
     // Process request after validation and sanitization.
     asyncHandler(async (req, res, next) => {
       try {
-        // Extract the validation errors from the request.
         const errors = validationResult(req);
   
-        // Create a Product object with escaped and trimmed data.
         const product = new Product({
           name: req.body.name,
           description: req.body.description,
           units: req.body.units,
           price: req.body.price,
           category: req.body.category,
+          image: req.file ? req.file.filename : null, 
         });
   
         if (!errors.isEmpty()) {
           const categories = await Category.find().exec();
   
-          // There are errors. Render the form again with sanitized values and error messages.
-          res.render("layout", {
-            title: "Create Product",
-            content: "product_form",
+          res.render('layout', {
+            title: 'Create Product',
+            content: 'product_form',
             product: product,
             categories: categories,
             errors: errors.array(),
@@ -153,6 +157,7 @@ exports.product_create_get = asyncHandler(async (req, res, next) => {
       }
     }),
   ];
+  
   
 // Display product delete form on GET.
 exports.product_delete_get = asyncHandler(async (req, res, next) => {
@@ -203,50 +208,63 @@ exports.product_update_get = asyncHandler(async (req, res, next) => {
 });
 
 // Handle product update on POST.
-exports.product_update_post = asyncHandler(async (req, res, next) => {
-    body("name")
-    .trim()
-    .isLength({ min: 1 })
-    .escape()
-    .withMessage("Product name must be specified.")
-    .withMessage("Product name has non-alphanumeric characters."),
-  body("description")
-    .trim()
-    .isLength({ min: 1 })
-    .escape()
-    .withMessage("Description must be specified."),
-  body("units").isNumeric().withMessage("Invalid units"),
-  body("price").isNumeric().withMessage("Invalid price"),
-  body("category")
-    .trim()
-    .isLength({ min: 1 })
-    .escape()
-    .withMessage("Category must be specified.");
-
-  const errors = validationResult(req);
-
-  const product = new Product({
-    _id:req.params.id,
-    name: req.body.name,
-    description: req.body.description,
-    units: req.body.units,
-    price: req.body.price,
-    category: req.body.category,
-  });
-
-  if (!errors.isEmpty()) {
-    res.render("layout", {
-        title: "Create Product",
-        content: "product_form",
-        product: product,
-        categories: categories,
-        errors: errors.array(),
-    });
-    return;
-  } else {
-    // Data from form is valid. Update the record.
-    const theproduct = await Product.findByIdAndUpdate(req.params.id, product, {});
-    // Redirect to category detail page.
-    res.redirect(theproduct.url);
-  }
-});
+exports.product_update_post = [
+    // Use multer middleware to handle file upload
+    upload.single('image'),
+  
+    // Validate and sanitize fields.
+    body('name')
+      .trim()
+      .isLength({ min: 1 })
+      .escape()
+      .withMessage('Product name must be specified.')
+      .withMessage('Product name has non-alphanumeric characters.'),
+    body('description')
+      .trim()
+      .isLength({ min: 1 })
+      .escape()
+      .withMessage('Description must be specified.'),
+    body('units').isNumeric().withMessage('Invalid units'),
+    body('price').isNumeric().withMessage('Invalid price'),
+    body('category')
+      .trim()
+      .isLength({ min: 1 })
+      .escape()
+      .withMessage('Category must be specified.'),
+  
+    // Process request after validation and sanitization.
+    asyncHandler(async (req, res, next) => {
+      try {
+        const errors = validationResult(req);
+  
+        const product = new Product({
+          _id: req.params.id,
+          name: req.body.name,
+          description: req.body.description,
+          units: req.body.units,
+          price: req.body.price,
+          category: req.body.category,
+          image: req.file ? req.file.filename : null,
+        });
+  
+        if (!errors.isEmpty()) {
+          res.render('layout', {
+            title: 'Create Product',
+            content: 'product_form',
+            product: product,
+            categories: categories,
+            errors: errors.array(),
+          });
+          return;
+        } else {
+          // Data from form is valid. Update the record.
+          const theproduct = await Product.findByIdAndUpdate(req.params.id, product, {});
+          // Redirect to category detail page.
+          res.redirect(theproduct.url);
+        }
+      } catch (err) {
+        next(err);
+      }
+    }),
+  ];
+  

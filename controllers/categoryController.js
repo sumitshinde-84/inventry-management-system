@@ -1,12 +1,12 @@
-const Category = require("../models/category");
+const Category = require("../model/category");
 const asyncHandler = require("express-async-handler");
-const Product = require("../models/product");
+const Product = require("../model/product");
 const { body, validationResult } = require("express-validator");
 
 
 // Display list of all categories.
 exports.category_list = asyncHandler(async (req, res, next) => {
-  const allCategory = await Category.find({},'name').exec()
+  const allCategory = await Category.find({}).exec()
 
   if(allCategory === null){
     const err = new Error('categories not found')

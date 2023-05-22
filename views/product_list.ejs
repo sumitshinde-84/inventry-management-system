@@ -1,10 +1,42 @@
 <div class="container">
     <div class="indexDiv">
-        <h1><%=title%></h1>
-        <ul>
-            <%for(const product of products){%>
-                <li><a href=<%=product.url%>><%=product.name%> price: <%=product.price%></a></li>
-                <%}%>
-        </ul>
+      <h1><%= title %></h1>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th class="description-column">Description</th>
+              <th>Price</th>
+              <th>Image</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (products.length > 0) { %>
+              <% products.forEach(function(product, index) { %>
+                <tr class="game-list">
+                  <td><%= index + 1 %></td>
+                  <td><a href="<%= product.url %>"><%= product.name %></a></td>
+                  <td><%= product.description %></td>
+                  <td><%= product.price %></td>
+                  <td><a href="<%= product.url %>"> <%=product.image%></a></td>
+                  <td>
+                    <a href="<%= product.url + '/delete' %>" class="btn  btn-sm "><i class="fas fa-trash-alt"></i></a>
+                    <a href="<%= product.url + '/update' %>" class="btn  btn-sm"><i class="fas fa-edit"></i></a>
+                </td>
+                  
+                </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="7">There are no products.</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
     </div>
-</div>
+  </div>
+  

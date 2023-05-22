@@ -2,20 +2,25 @@
   <div class="indexDiv">
     <h1 class="display-4"><%= title %></h1>
 
-    <p class="lead">
-      Welcome to <em><%= title %></em>, the place where you can manage your
-      products.
-    </p>
+  
 
     <h3>Database contains the following:</h3>
 
-    <ul class="list-group">
-      <li class="list-group-item">
-        <strong>Products:</strong> <%= product_count %>
-      </li>
-      <li class="list-group-item">
-        <strong>Categories:</strong> <%= category_count %>
-      </li>
-    </ul>
+    <div class="category-card">
+      <div>
+        <strong>Products</strong> 
+        <div class="icon product-icon">
+          <i class="fas fa-cube"></i> <!-- Replace "fas fa-cube" with the appropriate class for your product icon -->
+          <p><%= product_count %></p>
+        </div>
+      </div>
+     <div>
+      <strong>Categories</strong> 
+      <div class="icon category-icon">
+        <i class="fas fa-folder"></i> <!-- Replace "fas fa-folder" with the appropriate class for your category icon -->
+        <p><%= category_count %></p>
+      </div>
+     </div>
+    </div>
   </div>
 </div>

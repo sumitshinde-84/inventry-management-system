@@ -3,8 +3,8 @@
 
   const userArgs = process.argv.slice(2);
   
-  const Product = require("./models/product");
-  const Category = require("./models/category");
+  const Product = require("./model/product");
+  const Category = require("./model/category");
   
   
   const  categories = [];

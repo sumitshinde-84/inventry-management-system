@@ -3,6 +3,42 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      .table-container {
+        width: 100%;
+        overflow-x: auto;
+      }
+      
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        border: 1px solid #ddd;
+      }
+      
+      th,
+      td {
+        padding: 5px;
+        width: 10%;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+      
+      th {
+        white-space: nowrap;
+        background-color:rgb(82, 82, 255);
+        color: white;
+      }
+      
+      
+      .description-column {
+        width: 45%;
+      }
+      
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
@@ -23,21 +59,22 @@
    
   </head>
   <body>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-2">
-          <ul class="sidebar-nav">
+    <div class="">
+      <div class="container">
+        <div class="sidebar">
+          <h3>RONEX</h3>
+          <ul class="nav" >
             <li><a href="/catalog">Home</a></li>
             <li><a href="/catalog/products">All products</a></li>
             <li><a href="/catalog/categories">All categories</a></li>
          
             <hr>
-            <li><a href="/catalog/product/create">Create new product</a></li>
-            <li><a href="/catalog/category/create">Create new category</a></li>
+            <li><a href="/catalog/product/create">Create  product</a></li>
+            <li><a href="/catalog/category/create">Create  category</a></li>
            
           </ul>
         </div>
-        <div class="col-sm-10">
+        <div class="main-content">
          
           <%- include(content) %>
         </div>

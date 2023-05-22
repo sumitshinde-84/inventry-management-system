@@ -1,0 +1,220 @@
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+
+
+body {
+ 
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  height: 120vh;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.list-image{
+  width: 5%;
+}
+.detail-image{
+  width: 30%;
+}
+
+
+.sidebar{
+  height: 100vh;
+  background-color: rgb(82, 82, 255);
+  height: 100vh;
+  width:15%;
+  position: fixed;
+  left: 0;
+  padding: 20px;
+}
+
+.container{
+  display: flex;
+  position: absolute;
+  right: 0;
+ 
+}
+
+.main-content{ 
+  width: 85%;
+
+  
+}
+
+h3{
+  font-weight:800;
+  color: white;
+}
+
+.nav >li{
+  padding-left: 5px;
+  list-style: none;
+  font-size: 16px;
+  height: 30px;
+  width: 100%;
+  transition: background ease-in-out .2s;
+  padding-top: 5px;
+}
+
+.nav >li:hover{
+
+  background-color: rgb(59, 59, 226) ;
+  
+}
+
+.nav > li > a{ 
+  color: white;
+  text-decoration: none;
+  
+  
+  }
+
+  .nav  li > a:hover{ 
+    color: white;
+    text-decoration: none;
+    
+    }
+
+.btn{
+  background-color: rgb(82, 82, 255);
+  color: white;
+}
+
+
+.logo{
+  grid-row: 1 / 2;
+  display: flex;
+  justify-content: center;
+  margin-top: var(--logo-margin-top); 
+  margin-bottom: var(--logo-margin-bottom);
+  align-items: center;
+  align-self: self-start;
+  
+  
+}
+
+/* Dashboard icon by grid method */
+
+.icon{
+  margin-top:var(--icon-margin-top);
+  width:var(--icon-width);
+  height: var(--icon-height);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  gap: 4px;
+  margin-right: var(--icon-margin-right);
+  
+  
+}
+
+
+.text{
+  font-size: 10px;
+  color:var(--menu-text-color);
+}
+
+.icon >div{
+  background-color: var(--menu-text-color);
+}
+
+.one{
+  grid-column: 1 / 2;
+  grid-row: 1 / 3;
+}
+
+.two{
+  grid-column: 1 /2;
+  grid-row: 3 / 4;
+}
+
+.three{
+
+  grid-column:2 / 3;
+  grid-row: 2 / 4;
+}
+
+.indexDiv{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+}
+
+h1 {
+   margin-left: auto;
+   margin-right: auto;
+   color:  rgb(82, 82, 255);
+}
+
+form button{
+  margin-left: 45%;
+}
+
+form {
+  width:60%;
+  margin-left:20%;
+}
+
+.card img{
+  width: 400px;
+  border-radius: 5px;
+}
+
+.card{
+  border-radius: 8px;
+  height: 400px;
+  display: flex;
+  width:400px;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 50px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);;
+  border: 1px solid rgba(128, 128, 128, 0.307);
+
+}
+
+.detail{
+  padding: 10px;
+}
+
+.lead{
+  margin-left: 170px;
+}
+
+
+.category-card{
+  display: flex;
+  justify-content: center;
+  gap: 100px;
+  
+}
+
+.category-card > div{
+  width: 150px;
+  height: 100px;
+  list-style: none;
+  background-color: rgb(82, 82, 255);
+  border-radius: 5px;
+  color: white;
+  padding: 13px;
+}
+
+.category-card i{
+  font-size: 25px;
+  margin-top: 20px;
+}
+
+.category-card p{
+  margin-left: 20px;
+  margin-top: 24px;
+  font-weight: 700;
+  font-size: 18px;
+}

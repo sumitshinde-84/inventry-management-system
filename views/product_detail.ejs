@@ -1,13 +1,18 @@
 <div class="container">
     <div class="indexDiv">
       <h1><%= product.name %></h1>
-      <p><strong>Category:</strong> <%= product.category.name %></p>
-      <p><strong>Description:</strong> <%= product.description %></p>
-      <p><strong>Price:</strong> <%= product.price %></p>
-      <hr>
-      <p><a href="<%= product.url + '/delete' %>">Delete product</a></p>
-      <hr>
-      <p><a href="<%= product.url + '/update' %>">Update product</a></p>
+      <div class="card">
+      <div>
+        <a href="<%= product.url %>"><img class="detail-image" src="/images/<%= product.image %>" alt="Product Image" /></a>
+      </div>
+      <div class="detail" >
+
+        <p><strong>Category:</strong> <%= product.category.name %></p>
+        <p><strong>Description:</strong> <%= product.description %></p>
+        <p><strong>Price:</strong> <%= product.price %></p>
+
+      </div>
+    </div>
     </div>
   </div>
   

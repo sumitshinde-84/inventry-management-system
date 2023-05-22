@@ -1,10 +1,29 @@
 <div class="container">
     <div class="indexDiv">
-        <h1><%=title%></h1>
-        <ul>
-            <%for(const category of categories){%>
-                <li><a href=<%=category.url%>><%=category.name%></a></li>
-                <%}%>
-        </ul>
+      <h1><%= title %></h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Category Name</th>
+            <th>Description</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% categories.forEach(function(category, index) { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><a href="<%= category.url %>"><%= category.name %></a></td>
+              <td><%= category.description %></td>
+              <td>
+                <a href="<%= category.url + '/delete' %>" class="btn  btn-sm "><i class="fas fa-trash-alt"></i></a>
+                <a href="<%= category.url + '/update' %>" class="btn  btn-sm"><i class="fas fa-edit"></i></a>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
     </div>
-</div>
+  </div>
+  
