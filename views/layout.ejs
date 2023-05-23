@@ -10,7 +10,7 @@
       }
       
       table {
-        width: 80%;
+        width: 100%;
         border-collapse: collapse;
         border: 1px solid #ddd;
         margin-left: auto;
@@ -20,17 +20,15 @@
       th,
       td {
         padding: 5px;
-        width: 8%;
         text-align: left;
         border: 1px solid #ddd;
       }
       
       th {
         white-space: nowrap;
-        background-color:rgb(82, 82, 255);
+        background-color: rgb(82, 82, 255);
         color: white;
       }
-      
       
       .description-column {
         width: 45%;
@@ -38,6 +36,25 @@
       
       tbody tr:last-child td {
         border-bottom: none;
+      }
+      
+      /* Responsive Styles */
+      
+      @media screen and (max-width: 600px) {
+        table {
+          font-size: 12px;
+        }
+        
+        th,
+        td {
+          padding: 3px;
+        }
+      }
+      
+      @media screen and (max-width: 400px) {
+        table {
+          font-size: 10px;
+        }
       }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -58,30 +75,25 @@
       crossorigin="anonymous"
     ></script>
     <link rel="stylesheet" href="/stylesheets/style.css" />
-   
   </head>
   <body>
     <div class="">
       <div class="container">
         <div class="sidebar">
           <h3>RONEX</h3>
-          <ul class="nav" >
+          <ul class="nav">
             <li><a href="/catalog">Home</a></li>
             <li><a href="/catalog/products">All products</a></li>
             <li><a href="/catalog/categories">All categories</a></li>
-         
             <hr>
-            <li><a href="/catalog/product/create">Create  product</a></li>
-            <li><a href="/catalog/category/create">Create  category</a></li>
-           
+            <li><a href="/catalog/product/create">Create product</a></li>
+            <li><a href="/catalog/category/create">Create category</a></li>
           </ul>
         </div>
         <div class="main-content">
-         
           <%- include(content) %>
         </div>
       </div>
     </div>
-    
   </body>
 </html>
