@@ -1,11 +1,12 @@
 <div class="container">
     <div class="indexDiv">
       <h1><%= category.name %></h1>
-  
-      <p><strong>Description:</strong> <%= category.description %></p>
-  
-      <div class="container">
-        <h4>Products</h4>
+     
+      <center><p><strong>Description:</strong> <%= category.description %></p></center>
+      <hr>
+  <center><h4>Products</h4></center>
+      <div class="container" id="category-center" >
+        
         <hr>
         <ul>
           <% for (const product of products) { %>

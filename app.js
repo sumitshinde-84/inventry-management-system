@@ -62,7 +62,7 @@ app.use(function(err, req, res, next) {
 
 
 mongoose.set("strictQuery", false);
-const mongoDB = process.env.MONGODB_URI ;
+const mongoDB = process.env.MONGODB_URI;
 
 main().catch((err) => console.log(err));
 async function main() {

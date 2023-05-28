@@ -145,6 +145,7 @@ h3{
   flex-direction: column;
   justify-content: center;
   width: 95%;
+  padding:50px;
 }
 
 h1 {
@@ -217,4 +218,12 @@ form {
   margin-top: 24px;
   font-weight: 700;
   font-size: 18px;
+}
+
+#category-center{
+  
+
+  margin-left: 300px;
+  position: relative;
+  
 }
