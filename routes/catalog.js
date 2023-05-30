@@ -68,7 +68,7 @@ router.get("/categories/send", category_controller.category_list_send_json);
 
 // shoping site routes
 
-router.get("/api/register", user_controller.register_user_post);
+router.post("/api/register", user_controller.register_user_post);
 
 
 
