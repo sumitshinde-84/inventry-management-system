@@ -4,7 +4,7 @@ const router = express.Router();
 // Require controller modules.
 const category_controller = require("../controllers/categoryController");
 const product_controller = require("../controllers/productController");
-
+const user_controller = require('../controllers/userController')
 
 /// PRODUCT ROUTES ///
 
@@ -65,6 +65,12 @@ router.get("/category/:id", category_controller.category_detail);
 router.get("/categories", category_controller.category_list);
 
 router.get("/categories/send", category_controller.category_list_send_json);
+
+// shoping site routes
+
+router.get("/api/register", user_controller.register_user_post);
+
+
 
 
 module.exports = router;
