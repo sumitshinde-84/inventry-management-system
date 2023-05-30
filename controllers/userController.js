@@ -14,10 +14,7 @@ exports.register_user_post = [
     try {
       const errors = validationResult(req);
 
-      if (!errors.isEmpty()) {
-        // There are validation errors
-        return res.status(400).json({ errors: errors.array() });
-      }
+      
 
       const { firstname, lastname, email, password } = req.body;
 
@@ -38,4 +35,9 @@ exports.register_user_post = [
       return res.status(500).json({ error: "Registration failed" });
     }
   }),
+
+  // Add a fallback response if the route is accessed directly
+  (req, res) => {
+    return res.status(404).json({ error: "Page not found" });
+  }
 ];
