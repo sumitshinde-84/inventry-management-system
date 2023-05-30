@@ -14,7 +14,10 @@ exports.register_user_post = [
     try {
       const errors = validationResult(req);
 
-      
+      if (!errors.isEmpty()) {
+        // There are validation errors
+        return res.status(400).json({ errors: errors.array() });
+      }
 
       const { firstname, lastname, email, password } = req.body;
 
