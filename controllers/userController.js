@@ -25,7 +25,7 @@ exports.register_user_post = [
         firstname,
         lastname,
         email,
-        hashedPassword,
+        password:hashedPassword,
       });
 
       // Save the user.
