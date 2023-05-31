@@ -2,7 +2,7 @@ const User = require("../model/user");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const passport = require('passport');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 exports.register_user_post = [
   // Validate and sanitize request body fields
