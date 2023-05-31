@@ -1,14 +1,14 @@
 const User = require("../model/user");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
-
+const passport = require('passport')
 exports.register_user_post = [
   // Validate and sanitize request body fields
   body("firstname").trim().notEmpty().withMessage("First name must be specified."),
   body("lastname").trim().notEmpty().withMessage("Last name must be specified."),
   body("email").trim().isEmail().withMessage("Invalid email address."),
   body("password").trim().notEmpty().withMessage("Password must be specified."),
-
+  
   // Process request after validation and sanitization.
   asyncHandler(async (req, res, next) => {
     try {
@@ -20,12 +20,12 @@ exports.register_user_post = [
       }
 
       const { firstname, lastname, email, password } = req.body;
-
+      const hashedPassword = await bcrypt.hash(password, 10);
       const user = new User({
         firstname,
         lastname,
         email,
-        password,
+        hashedPassword,
       });
 
       // Save the user.
@@ -44,3 +44,11 @@ exports.register_user_post = [
     return res.status(404).json({ error: "Page not found" });
   }
 ];
+
+exports.login_user_post = (req,res,next)=>{
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/"
+  })
+}
+

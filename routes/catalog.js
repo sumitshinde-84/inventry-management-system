@@ -70,7 +70,7 @@ router.get("/categories/send", category_controller.category_list_send_json);
 
 router.post("/register", user_controller.register_user_post);
 
-
+router.post('/login',user_controller.login_user_post)
 
 
 module.exports = router;
