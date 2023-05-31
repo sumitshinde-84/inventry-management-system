@@ -48,7 +48,6 @@ exports.register_user_post = [
   }
 ];
 
-exports.login_user_post = passport.authenticate("local", {
-  successRedirect: "/",
-  failureRedirect: "/"
-});
+exports.login_user_post = passport.authenticate("local"), (req, res) => {
+  res.status(200).json({ message: "Login successful", user: req.user });
+};
