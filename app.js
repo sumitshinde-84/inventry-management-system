@@ -61,15 +61,7 @@ passport.deserializeUser(async function(id, done) {
     done(err);
   };
 });
-app.use( session({
-  secret: "your_session_secret",
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: true,
-    httpOnly: true, 
-  },
-}));
+app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
