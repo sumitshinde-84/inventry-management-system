@@ -48,7 +48,30 @@ exports.register_user_post = [
   }
 ];
 
-exports.login_user_post = passport.authenticate("local", {
-  successRedirect: "/",
-  failureRedirect: "/"
-});
+exports.login_user_post = (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "An error occurred" });
+    }
+
+    if (!user) {
+      return res.status(401).json({ error: "Invalid credentials" });
+    }
+
+    req.login(user, (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "An error occurred" });
+      }
+
+   
+      res.cookie("cookieName", "cookieValue", { maxAge: 3600000 }); // Example cookie
+
+   
+      const { _id, username, email } = user;
+      return res.status(200).json({ message: "Login successful", user: { _id, username, email } });
+    });
+  })(req, res, next);
+};
+
