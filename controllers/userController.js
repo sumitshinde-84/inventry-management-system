@@ -1,14 +1,16 @@
 const User = require("../model/user");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
-const passport = require('passport')
+const passport = require('passport');
+const bcrypt = require('bcrypt');
+
 exports.register_user_post = [
   // Validate and sanitize request body fields
   body("firstname").trim().notEmpty().withMessage("First name must be specified."),
   body("lastname").trim().notEmpty().withMessage("Last name must be specified."),
   body("email").trim().isEmail().withMessage("Invalid email address."),
   body("password").trim().notEmpty().withMessage("Password must be specified."),
-  
+
   // Process request after validation and sanitization.
   asyncHandler(async (req, res, next) => {
     try {
@@ -25,7 +27,7 @@ exports.register_user_post = [
         firstname,
         lastname,
         email,
-        password:hashedPassword,
+        password: hashedPassword,
       });
 
       // Save the user.
@@ -35,6 +37,7 @@ exports.register_user_post = [
       return res.status(200).json({ message: "Registration successful" });
     } catch (err) {
       // Error occurred while registering
+      console.error(err);
       return res.status(500).json({ error: "Registration failed" });
     }
   }),
@@ -45,10 +48,7 @@ exports.register_user_post = [
   }
 ];
 
-exports.login_user_post = (req,res,next)=>{
-  passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/"
-  })
-}
-
+exports.login_user_post = passport.authenticate("local", {
+  successRedirect: "/",
+  failureRedirect: "/"
+});
