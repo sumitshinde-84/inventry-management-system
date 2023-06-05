@@ -18,7 +18,7 @@ exports.order_post = asyncHandler(async (req, res, next) => {
 
     const newOrder = new Order({
       user,
-      totalPrice,
+    //   totalPrice,
       status,
       paymentStatus,
       cart
