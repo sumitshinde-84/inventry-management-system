@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
+const jwt = require("jsonwebtoken");
 
 exports.register_user_post = [
   // Validate and sanitize request body fields
@@ -30,11 +31,14 @@ exports.register_user_post = [
         password: hashedPassword,
       });
 
-      // Save the user.
+    
       await user.save();
 
+      
+      const token = jwt.sign({ userId: user._id }, "your-secret-key", { expiresIn: "1h" });
+
       // Registration successful
-      return res.status(200).json({ message: "Registration successful" });
+      return res.status(200).json({ message: "Registration successful", token });
     } catch (err) {
       // Error occurred while registering
       console.error(err);
@@ -53,8 +57,6 @@ exports.login_user_post = passport.authenticate("local", {
   failureRedirect: "/"
 });
 
-
-
 exports.user_list = asyncHandler(async (req, res, next) => {
   const allUsers = await User.find({}).exec()
 
@@ -63,11 +65,11 @@ exports.user_list = asyncHandler(async (req, res, next) => {
     err.status = 404
     next(err)
   }
-  const responceData = {
-    title:'Users',
-    content:'user_list',
-    users:allUsers
+  const responseData = {
+    title: 'Users',
+    content: 'user_list',
+    users: allUsers
   }
   
-  res.render('layout',responceData)
+  res.render('layout', responseData)
 });
