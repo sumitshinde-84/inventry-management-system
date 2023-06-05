@@ -31,10 +31,8 @@ exports.register_user_post = [
         password: hashedPassword,
       });
 
-    
       await user.save();
 
-      
       const token = jwt.sign({ userId: user._id }, "your-secret-key", { expiresIn: "1h" });
 
       // Registration successful
@@ -52,24 +50,47 @@ exports.register_user_post = [
   }
 ];
 
-exports.login_user_post = passport.authenticate("local", {
-  successRedirect: "/",
-  failureRedirect: "/"
-});
+exports.login_user_post = async (req, res, next) => {
+  passport.authenticate("local", async (err, user, info) => {
+    try {
+      if (err) {
+        throw err;
+      }
+
+      if (!user) {
+        return res.status(401).json({ error: "Invalid credentials" });
+      }
+
+      req.login(user, { session: false }, async (err) => {
+        if (err) {
+          throw err;
+        }
+
+        const token = jwt.sign({ userId: user._id }, "your-secret-key", { expiresIn: "1h" });
+
+        return res.status(200).json({ message: "Login successful", token });
+      });
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Login failed" });
+    }
+  })(req, res, next);
+};
 
 exports.user_list = asyncHandler(async (req, res, next) => {
   const allUsers = await User.find({}).exec()
 
-  if(allUsers === null){
-    const err = new Error('users not found')
-    err.status = 404
-    next(err)
+  if (allUsers === null) {
+    const err = new Error('Users not found');
+    err.status = 404;
+    return next(err);
   }
+
   const responseData = {
     title: 'Users',
     content: 'user_list',
     users: allUsers
-  }
-  
-  res.render('layout', responseData)
+  };
+
+  res.render('layout', responseData);
 });
