@@ -14,11 +14,11 @@ exports.order_post = asyncHandler(async (req, res, next) => {
 
     const { username, cart, status, totalPrice, paymentStatus, addressFormData } = req.body;
 
-    const user = await User.find({ email: username }).exec();
+    const user = await User.find({ email: 'sumitstudy185@gmail.com' }).exec();
 
 
     const newOrder = new Order({
-    //   user,
+      user,
       totalPrice,
       status,
       paymentStatus,
