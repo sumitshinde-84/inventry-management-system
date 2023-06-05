@@ -52,3 +52,22 @@ exports.login_user_post = passport.authenticate("local", {
   successRedirect: "/",
   failureRedirect: "/"
 });
+
+
+
+exports.user_list = asyncHandler(async (req, res, next) => {
+  const allUsers = await User.find({}).exec()
+
+  if(allUsers === null){
+    const err = new Error('users not found')
+    err.status = 404
+    next(err)
+  }
+  const responceData = {
+    title:'Users',
+    content:'user_list',
+    users:allUsers
+  }
+  
+  res.render('layout',responceData)
+});

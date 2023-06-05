@@ -1,0 +1,31 @@
+<div class="container">
+    <div class="indexDiv">
+      <h1><%= title %></h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Username</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach(function(user, index) { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><a href="<%= user.url %>"><%= user.firstname %></a></td>
+              <td><%= user.lastname%></td>
+              <td><%= user.email%></td>
+              <td>
+                <a href="<%= user.url + '/delete' %>" class="btn  btn-sm "><i class="fas fa-trash-alt"></i></a>
+                <a href="<%= user.url + '/update' %>" class="btn  btn-sm"><i class="fas fa-edit"></i></a>
+              </td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  

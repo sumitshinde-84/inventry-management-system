@@ -5,6 +5,7 @@ const router = express.Router();
 const category_controller = require("../controllers/categoryController");
 const product_controller = require("../controllers/productController");
 const user_controller = require('../controllers/userController')
+const order_controller = require('../controllers/orderController')
 
 /// PRODUCT ROUTES ///
 
@@ -72,5 +73,7 @@ router.post("/register", user_controller.register_user_post);
 
 router.post('/login',user_controller.login_user_post)
 
+router.get("/users", user_controller.user_list);
 
+router.post('/placeorder',order_controller.order_post)
 module.exports = router;

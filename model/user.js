@@ -10,7 +10,10 @@ const UserSchema = new Schema({
  
 });
 
-
+UserSchema.virtual("url").get(function () {
+  // We don't use an arrow function as we'll need the this object
+  return `/catalog/user/${this._id}`;
+});
 
 
 // Export model
