@@ -17,8 +17,8 @@ exports.order_post = asyncHandler(async (req, res, next) => {
     const user = await User.find({ email: username }).exec();
 
     const newOrder = new Order({
-    //   user,
-    //   totalPrice,
+      user,
+      totalPrice,
       status,
       paymentStatus,
       cart
