@@ -12,7 +12,7 @@ exports.order_post = asyncHandler(async (req, res, next) => {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { username, cart, status, totalPrice, paymentStatus } = req.body;
+    const { username, cart, status, totalPrice, paymentStatus, addressFormData } = req.body;
 
     const user = await User.find({ email: username }).exec();
 
@@ -21,7 +21,8 @@ exports.order_post = asyncHandler(async (req, res, next) => {
       totalPrice,
       status,
       paymentStatus,
-      cart
+      cart,
+      addressAndContact:addressFormData
     });
 
   
