@@ -1,5 +1,7 @@
 const Order = require('../model/order');
 const asyncHandler = require("express-async-handler");
+const User = require('../model/User');
+
 const { body, validationResult } = require("express-validator");
 
 exports.order_post = asyncHandler(async (req, res, next) => {
