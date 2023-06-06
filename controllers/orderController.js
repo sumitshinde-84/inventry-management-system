@@ -16,7 +16,6 @@ exports.order_post = asyncHandler(async (req, res, next) => {
 
     const user = await User.findById('647710dba3bee2107e682989').exec();
 
-
     const newOrder = new Order({
       user,
       totalPrice,
