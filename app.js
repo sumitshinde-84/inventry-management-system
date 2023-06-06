@@ -34,15 +34,19 @@ passport.use(
         return done(null, false, { message: "Incorrect email" });
       }
 
-      const passwordMatch = await bcrypt.compare(password, user.password);
-      if (!passwordMatch) {
-        return done(null, false, { message: "Incorrect password" });
-      }
-
+      bcrypt.compare(password, user.password, (err, res) => {
+        if (res) {
+          // passwords match! log user in
+          return done(null, user)
+        } else {
+          // passwords do not match!
+          return done(null, false, { message: "Incorrect password" })
+        }
+      })
       return done(null, user);
-    } catch (err) {
+    } catch(err) {
       return done(err);
-    }
+    };
   })
 );
 
