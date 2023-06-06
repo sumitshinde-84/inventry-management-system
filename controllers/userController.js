@@ -3,6 +3,18 @@ const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+// Function to generate a JWT token
+const generateToken = (user) => {
+  const payload = {
+    _id: user._id,
+    email: user.email
+  };
+
+  const token = jwt.sign(payload, 'your-secret-key', { expiresIn: '1h' });
+  return token;
+};
 
 exports.register_user_post = [
   // Validate and sanitize request body fields
@@ -32,6 +44,9 @@ exports.register_user_post = [
 
       await user.save();
 
+      // Generate JWT token
+      const token = generateToken(user);
+
       // Registration successful
       return res.status(200).json({
         message: "Registration successful",
@@ -41,6 +56,7 @@ exports.register_user_post = [
           lastname: user.lastname,
           email: user.email,
         },
+        token: token
       });
     } catch (err) {
       // Error occurred while registering
@@ -49,31 +65,26 @@ exports.register_user_post = [
     }
   }),
 
- 
   (req, res) => {
     return res.status(404).json({ error: "Page not found" });
   },
 ];
 
 exports.login_user_post = [
-
-  passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/",
-  }),
-
- 
+  passport.authenticate("local", { session: false }),
   asyncHandler(async (req, res, next) => {
     try {
-   
+      // Generate JWT token
+      const token = generateToken(req.user);
+
       return res.status(200).json({
         message: "Login successful",
         user: {
           _id: req.user._id,
         },
+        token: token
       });
     } catch (err) {
-      
       console.error(err);
       return res.status(500).json({ error: "Login failed" });
     }
