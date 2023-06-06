@@ -39,16 +39,11 @@ exports.register_user_post = [
       console.error(err);
       return res.status(500).json({ error: "Registration failed" });
     }
-  }),
-
-  // Add a fallback response if the route is accessed directly
-  (req, res) => {
-    return res.status(404).json({ error: "Page not found" });
-  }
+  })
 ];
 
-exports.login_user_post = async (req, res, next) => {
-  passport.authenticate("local", async (err, user, info) => {
+exports.login_user_post = (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
     try {
       if (err) {
         throw err;
@@ -58,7 +53,7 @@ exports.login_user_post = async (req, res, next) => {
         return res.status(401).json({ error: "Invalid credentials" });
       }
 
-      req.login(user, { session: false }, async (err) => {
+      req.login(user, { session: false }, (err) => {
         if (err) {
           throw err;
         }
@@ -73,9 +68,9 @@ exports.login_user_post = async (req, res, next) => {
 };
 
 exports.user_list = asyncHandler(async (req, res, next) => {
-  const allUsers = await User.find({}).exec()
+  const allUsers = await User.find({}).exec();
 
-  if (allUsers === null) {
+  if (allUsers.length === 0) {
     const err = new Error('Users not found');
     err.status = 404;
     return next(err);
