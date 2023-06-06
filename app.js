@@ -27,27 +27,25 @@ app.use(logger('dev'));
 app.use(express.json());
 
 passport.use(
-  new LocalStrategy(async(email, password, done) => {
+  new LocalStrategy(async (email, password, done) => {
     try {
       const user = await User.findOne({ email: email });
       if (!user) {
         return done(null, false, { message: "Incorrect email" });
-      };
-      bcrypt.compare(password, user.password, (err, res) => {
-        if (res) {
-          // passwords match! log user in
-          return done(null, user)
-        } else {
-          // passwords do not match!
-          return done(null, false, { message: "Incorrect password" })
-        }
-      })
+      }
+
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      if (!passwordMatch) {
+        return done(null, false, { message: "Incorrect password" });
+      }
+
       return done(null, user);
-    } catch(err) {
+    } catch (err) {
       return done(err);
-    };
+    }
   })
 );
+
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
