@@ -4,6 +4,10 @@ const { body, validationResult } = require("express-validator");
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+
+// Generate a secret key
+const secretKey = crypto.randomBytes(32).toString("hex");
 
 exports.register_user_post = [
   // Validate and sanitize request body fields
@@ -33,7 +37,7 @@ exports.register_user_post = [
 
       await user.save();
 
-      const token = jwt.sign({ userId: user._id }, "your-secret-key", { expiresIn: "1h" });
+      const token = jwt.sign({ userId: user._id }, secretKey, { expiresIn: "1h" });
 
       // Registration successful
       return res.status(200).json({ message: "Registration successful", token });
@@ -50,23 +54,19 @@ exports.register_user_post = [
   }
 ];
 
-exports.login_user_post = async (req, res, next) => {
-  passport.authenticate("local", async (err, user, info) => {
+exports.login_user_post = (req, res, next) => {
+  passport.authenticate("local", { session: false }, (err, user, info) => {
     try {
-      if (err) {
-        throw err;
-      }
-
-      if (!user) {
+      if (err || !user) {
         return res.status(401).json({ error: "Invalid credentials" });
       }
 
-      req.login(user, { session: false }, async (err) => {
+      req.login(user, { session: false }, (err) => {
         if (err) {
           throw err;
         }
 
-        const token = jwt.sign({ userId: user._id }, "your-secret-key", { expiresIn: "1h" });
+        const token = jwt.sign({ userId: user._id }, secretKey, { expiresIn: "1h" });
 
         return res.status(200).json({ message: "Login successful", token });
       });
