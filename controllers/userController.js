@@ -4,6 +4,7 @@ const { body, validationResult } = require("express-validator");
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
 
+
 exports.register_user_post = [
   // Validate and sanitize request body fields
   body("firstname").trim().notEmpty().withMessage("First name must be specified."),
@@ -30,10 +31,14 @@ exports.register_user_post = [
         password: hashedPassword,
       });
 
+    
       await user.save();
 
+      
+      
+
       // Registration successful
-      return res.status(200).json({ message: "Registration successful", userId: user._id });
+      return res.status(200).json({ message: "Registration successful" });
     } catch (err) {
       // Error occurred while registering
       console.error(err);
@@ -47,46 +52,24 @@ exports.register_user_post = [
   }
 ];
 
-exports.login_user_post = (req, res, next) => {
-  passport.authenticate("local", (err, user, info) => {
-    try {
-      if (err) {
-        throw err;
-      }
-
-      if (!user) {
-        return res.status(401).json({ error: "Invalid credentials" });
-      }
-
-      req.login(user, { session: false }, (err) => {
-        if (err) {
-          throw err;
-        }
-
-        // Login successful
-        return res.status(200).json({ message: "Login successful", userId: user._id });
-      });
-    } catch (err) {
-      console.error(err);
-      return res.status(500).json({ error: "Login failed" });
-    }
-  })(req, res, next);
-};
+exports.login_user_post = passport.authenticate("local", {
+  successRedirect: "/",
+  failureRedirect: "/"
+});
 
 exports.user_list = asyncHandler(async (req, res, next) => {
-  const allUsers = await User.find({}).exec();
+  const allUsers = await User.find({}).exec()
 
-  if (allUsers.length === 0) {
-    const err = new Error('Users not found');
-    err.status = 404;
-    return next(err);
+  if(allUsers === null){
+    const err = new Error('users not found')
+    err.status = 404
+    next(err)
   }
-
   const responseData = {
     title: 'Users',
     content: 'user_list',
     users: allUsers
-  };
-
-  res.render('layout', responseData);
+  }
+  
+  res.render('layout', responseData)
 });
