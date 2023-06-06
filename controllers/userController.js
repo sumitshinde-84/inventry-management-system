@@ -4,7 +4,6 @@ const { body, validationResult } = require("express-validator");
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
 
-
 exports.register_user_post = [
   // Validate and sanitize request body fields
   body("firstname").trim().notEmpty().withMessage("First name must be specified."),
@@ -31,14 +30,18 @@ exports.register_user_post = [
         password: hashedPassword,
       });
 
-    
       await user.save();
 
-      
-      
-
       // Registration successful
-      return res.status(200).json({ message: "Registration successful" });
+      return res.status(200).json({
+        message: "Registration successful",
+        user: {
+          _id: user._id,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email,
+        },
+      });
     } catch (err) {
       // Error occurred while registering
       console.error(err);
@@ -46,30 +49,51 @@ exports.register_user_post = [
     }
   }),
 
-  // Add a fallback response if the route is accessed directly
+ 
   (req, res) => {
     return res.status(404).json({ error: "Page not found" });
-  }
+  },
 ];
 
-exports.login_user_post = passport.authenticate("local", {
-  successRedirect: "/",
-  failureRedirect: "/"
-});
+exports.login_user_post = [
+
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/",
+  }),
+
+ 
+  asyncHandler(async (req, res, next) => {
+    try {
+   
+      return res.status(200).json({
+        message: "Login successful",
+        user: {
+          _id: req.user._id,
+        },
+      });
+    } catch (err) {
+      
+      console.error(err);
+      return res.status(500).json({ error: "Login failed" });
+    }
+  }),
+];
 
 exports.user_list = asyncHandler(async (req, res, next) => {
-  const allUsers = await User.find({}).exec()
+  const allUsers = await User.find({}).exec();
 
-  if(allUsers === null){
-    const err = new Error('users not found')
-    err.status = 404
-    next(err)
+  if (allUsers === null) {
+    const err = new Error("Users not found");
+    err.status = 404;
+    next(err);
   }
+
   const responseData = {
-    title: 'Users',
-    content: 'user_list',
-    users: allUsers
-  }
-  
-  res.render('layout', responseData)
+    title: "Users",
+    content: "user_list",
+    users: allUsers,
+  };
+
+  res.render("layout", responseData);
 });
