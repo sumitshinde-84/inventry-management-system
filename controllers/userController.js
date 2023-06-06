@@ -47,37 +47,35 @@ exports.register_user_post = [
       console.error(err);
       return res.status(500).json({ error: "Registration failed" });
     }
-  }),
-
- 
-  (req, res) => {
-    return res.status(404).json({ error: "Page not found" });
-  },
+  })
 ];
 
 exports.login_user_post = [
-
-  passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/",
-  }),
-
- 
-  asyncHandler(async (req, res, next) => {
-    try {
-   
-      return res.status(200).json({
-        message: "Login successful",
-        user: {
-          _id: req.user._id,
-        },
+  (req, res, next) => {
+    passport.authenticate("local", (err, user, info) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Login failed" });
+      }
+      if (!user) {
+        // Authentication failed
+        return res.status(401).json({ error: "Invalid email or password" });
+      }
+      req.logIn(user, (err) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).json({ error: "Login failed" });
+        }
+        // Login successful
+        return res.status(200).json({
+          message: "Login successful",
+          user: {
+            _id: user._id,
+          },
+        });
       });
-    } catch (err) {
-      
-      console.error(err);
-      return res.status(500).json({ error: "Login failed" });
-    }
-  }),
+    })(req, res, next);
+  }
 ];
 
 exports.user_list = asyncHandler(async (req, res, next) => {
@@ -86,7 +84,7 @@ exports.user_list = asyncHandler(async (req, res, next) => {
   if (allUsers === null) {
     const err = new Error("Users not found");
     err.status = 404;
-    next(err);
+    return next(err);
   }
 
   const responseData = {
