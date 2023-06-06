@@ -19,7 +19,6 @@ require('dotenv').config();
 const User = require('./model/user')
 var app = express();
 
-
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
@@ -50,11 +49,6 @@ passport.use(
   })
 );
 
-
-passport.serializeUser(function(user, done) {
-  done(null, user.id);
-});
-
 passport.deserializeUser(async function(id, done) {
   try {
     const user = await User.findById(id);
@@ -63,10 +57,14 @@ passport.deserializeUser(async function(id, done) {
     done(err);
   };
 });
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
 app.use(session({ secret: "cats", resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -95,19 +93,12 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-
-
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-
   res.status(err.status || 500);
   res.render('error');
 });
-
-
 
 mongoose.set("strictQuery", false);
 const mongoDB = process.env.MONGODB_URI;
@@ -116,6 +107,5 @@ main().catch((err) => console.log(err));
 async function main() {
   await mongoose.connect(mongoDB);
 }
-
 
 module.exports = app;
