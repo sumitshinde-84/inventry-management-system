@@ -69,11 +69,25 @@ router.get("/categories/send", category_controller.category_list_send_json);
 
 // shoping site routes
 
+
+// users route
+
 router.post("/register", user_controller.register_user_post);
 
 router.post('/login',user_controller.login_user_post)
 
 router.get("/users", user_controller.user_list);
 
+// order routes
+
 router.post('/placeorder',order_controller.order_post)
+
+router.get('/orders',order_controller.order_list);
+
+router.get('/order/:id/update', order_controller.order_update_get);
+
+router.post('/order/:id/update', order_controller.order_update);
+
+
+
 module.exports = router;

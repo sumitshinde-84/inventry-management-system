@@ -1,0 +1,35 @@
+<div class="container">
+    <div class="indexDiv">
+      <h1><%= title %></h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>USER</th>
+            <th>ADDRESS</th>
+            <th>DATE</th>
+            <th>TOTAL PRICE</th>
+            <th>STATUS</th>
+            <th>ACTION</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <% orders.forEach(function(order, index) { %>
+            <tr>
+              <td><%= index + 1 %></td>
+              <td><a href="<%= order.user.url %>"><%= order.user.firstname +" " +order.user.lastname %></a></td>
+              <td><%= order.addressAndContact.appartment +", "+ order.addressAndContact.city +", "+ order.addressAndContact.postalCode +", "+order.addressAndContact.phone %></td>
+              <td><%= order.createdAt%></td>
+              <td><%= order.totalPrice%></td>
+              <td>
+                <%=order.status%>
+              </td>
+              <td><a href="<%=order.url%>/update">update</a></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  

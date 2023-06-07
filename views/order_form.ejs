@@ -1,0 +1,16 @@
+<div class="container">
+    <div class="indexDiv">
+        <form action="" method="POST">
+            <input type="hidden" name="orderId" value="<%= order._id %>">
+            <div class="form-group">
+                <label for="status">Status:</label>
+                <input type="text" class="form-control" name="status" value="<%= order.status %>">
+            </div>
+            <div class="form-group">
+                <label for="paymentStatus">Payment Status:</label>
+                <input type="text" class="form-control" name="paymentStatus" value="<%= order.paymentStatus %>">
+            </div>
+            <button type="submit" class="btn btn-primary">Update Order</button>
+        </form>
+    </div>
+</div>
