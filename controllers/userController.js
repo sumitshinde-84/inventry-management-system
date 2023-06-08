@@ -1,14 +1,19 @@
 const User = require("../model/user");
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
-const passport = require('passport');
-const bcrypt = require('bcryptjs');
-
+const passport = require("passport");
+const bcrypt = require("bcryptjs");
 
 exports.register_user_post = [
   // Validate and sanitize request body fields
-  body("firstname").trim().notEmpty().withMessage("First name must be specified."),
-  body("lastname").trim().notEmpty().withMessage("Last name must be specified."),
+  body("firstname")
+    .trim()
+    .notEmpty()
+    .withMessage("First name must be specified."),
+  body("lastname")
+    .trim()
+    .notEmpty()
+    .withMessage("Last name must be specified."),
   body("email").trim().isEmail().withMessage("Invalid email address."),
   body("password").trim().notEmpty().withMessage("Password must be specified."),
 
@@ -31,11 +36,7 @@ exports.register_user_post = [
         password: hashedPassword,
       });
 
-    
       await user.save();
-
-      
-      
 
       // Registration successful
       return res.status(200).json({ message: "Registration successful" });
@@ -49,27 +50,27 @@ exports.register_user_post = [
   // Add a fallback response if the route is accessed directly
   (req, res) => {
     return res.status(404).json({ error: "Page not found" });
-  }
+  },
 ];
 
 exports.login_user_post = passport.authenticate("local", {
   successRedirect: "/",
-  failureRedirect: "/"
+  failureRedirect: "/",
 });
 
 exports.user_list = asyncHandler(async (req, res, next) => {
-  const allUsers = await User.find({}).exec()
+  const allUsers = await User.find({}).exec();
 
-  if(allUsers === null){
-    const err = new Error('users not found')
-    err.status = 404
-    next(err)
+  if (allUsers === null) {
+    const err = new Error("users not found");
+    err.status = 404;
+    next(err);
   }
   const responseData = {
-    title: 'Users',
-    content: 'user_list',
-    users: allUsers
-  }
-  
-  res.render('layout', responseData)
+    title: "Users",
+    content: "user_list",
+    users: allUsers,
+  };
+
+  res.render("layout", responseData);
 });

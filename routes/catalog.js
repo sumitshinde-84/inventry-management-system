@@ -4,8 +4,8 @@ const router = express.Router();
 // Require controller modules.
 const category_controller = require("../controllers/categoryController");
 const product_controller = require("../controllers/productController");
-const user_controller = require('../controllers/userController')
-const order_controller = require('../controllers/orderController')
+const user_controller = require("../controllers/userController");
+const order_controller = require("../controllers/orderController");
 
 /// PRODUCT ROUTES ///
 
@@ -38,7 +38,6 @@ router.get("/products", product_controller.product_list);
 
 router.get("/products/send", product_controller.product_list_send_json);
 
-
 /// CATEGORY ROUTES ///
 
 // GET request for creating category. NOTE This must come before route for id (i.e. display category).
@@ -69,25 +68,24 @@ router.get("/categories/send", category_controller.category_list_send_json);
 
 // shoping site routes
 
-
 // users route
 
 router.post("/register", user_controller.register_user_post);
 
-router.post('/login',user_controller.login_user_post)
+router.post("/login", user_controller.login_user_post);
 
 router.get("/users", user_controller.user_list);
 
 // order routes
 
-router.post('/placeorder',order_controller.order_post)
+router.post("/placeorder", order_controller.order_post);
 
-router.get('/orders',order_controller.order_list);
+router.get("/orders", order_controller.order_list);
 
-router.get('/order/:id/update', order_controller.order_update_get);
+router.get("/order/:id/update", order_controller.order_update_get);
 
-router.post('/order/:id/update', order_controller.order_update);
+router.post("/order/:id/update", order_controller.order_update);
 
-
+router.get('/orders/send',order_controller.send_order_list);
 
 module.exports = router;
