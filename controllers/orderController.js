@@ -101,19 +101,16 @@ exports.order_update = asyncHandler(async (req, res, next) => {
   }
 });
 
-
-exports.send_order_list = asyncHandler(async(req, res , next)=>{
-
+exports.send_order_list = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
-  const user = await User.findOne({email}).exec()
-  const orders = await Order.find({"user":user._id}).populate('user').exec();
+  const user = await User.findOne({ "email":req.params.id }).exec();
+  const orders = await Order.find({ user: user._id }).populate("user").exec();
 
-  if(orders ==null){
-    const err = new Error('order not found');
-    err.status=404;
-    next(err)
+  if (orders == null) {
+    const err = new Error("order not found");
+    err.status = 404;
+    next(err);
   }
 
-  res.json({orders})
-
-})
+  res.json({ orders });
+});

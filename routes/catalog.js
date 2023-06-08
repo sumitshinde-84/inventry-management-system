@@ -86,6 +86,6 @@ router.get("/order/:id/update", order_controller.order_update_get);
 
 router.post("/order/:id/update", order_controller.order_update);
 
-router.get('/orders/send',order_controller.send_order_list);
+router.get('/your-order/:id',order_controller.send_order_list);
 
 module.exports = router;
