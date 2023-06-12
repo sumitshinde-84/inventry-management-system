@@ -2,25 +2,37 @@
   <div class="indexDiv">
     <h1 class="display-4"><%= title %></h1>
 
-  
-
     <h3>Database contains the following:</h3>
 
     <div class="category-card">
       <div>
         <strong>Products</strong> 
         <div class="icon product-icon">
-          <i class="fas fa-cube"></i> <!-- Replace "fas fa-cube" with the appropriate class for your product icon -->
+          <i class="fas fa-cube"></i> 
           <p><%= product_count %></p>
         </div>
       </div>
-     <div>
-      <strong>Categories</strong> 
-      <div class="icon category-icon">
-        <i class="fas fa-folder"></i> <!-- Replace "fas fa-folder" with the appropriate class for your category icon -->
-        <p><%= category_count %></p>
+      <div>
+        <strong>Categories</strong> 
+        <div class="icon category-icon">
+          <i class="fas fa-folder"></i> 
+          <p><%= category_count %></p>
+        </div>
       </div>
-     </div>
+      <div>
+        <strong>Users</strong> 
+        <div class="icon user-icon">
+          <i class="fas fa-user"></i>
+          <p><%= user_count %></p>
+        </div>
+      </div>
+      <div>
+        <strong>Orders</strong> 
+        <div class="icon order-icon">
+          <i class="fas fa-truck"></i>
+          <p><%= order_count %></p>
+        </div>
+      </div>
     </div>
   </div>
 </div>

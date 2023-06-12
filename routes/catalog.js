@@ -88,4 +88,8 @@ router.post("/order/:id/update", order_controller.order_update);
 
 router.get('/your-order/:id',order_controller.send_order_list);
 
+router.get('/user/:id',user_controller.user_detail);
+
+router.get('/order/:id',order_controller.order_detail);
+
 module.exports = router;

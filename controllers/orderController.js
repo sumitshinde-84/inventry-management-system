@@ -114,3 +114,21 @@ exports.send_order_list = asyncHandler(async (req, res, next) => {
 
   res.json({ orders });
 });
+
+
+exports.order_detail = asyncHandler(async (req, res, next) => {
+  const order = await Order.findById(req.params.id).exec();
+  const user = await User.findById(order.user._id).exec()
+  if (!order) {
+    const err = new Error("Order not found");
+    err.status = 404;
+    throw err;
+  }
+
+  res.render("layout", {
+    content: "order_detail",
+    order: order,
+    user:user
+  });
+});
+

@@ -1,5 +1,7 @@
 const Category = require("../model/category");
 const Product = require("../model/product");
+const User = require('../model/user')
+const Order = require('../model/order')
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid");
 
@@ -17,9 +19,11 @@ const { body, validationResult } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 
 exports.index = asyncHandler(async (req, res, next) => {
-  const [numCategory, numProduct] = await Promise.all([
+  const [numCategory, numProduct,numUser,numOrder] = await Promise.all([
     Category.countDocuments({}).exec(),
     Product.countDocuments({}).exec(),
+    User.countDocuments({}).exec(),
+    Order.countDocuments({}).exec(),
   ]);
 
   res.render("layout", {
@@ -27,6 +31,8 @@ exports.index = asyncHandler(async (req, res, next) => {
     content: "index",
     product_count: numProduct,
     category_count: numCategory,
+    user_count:numUser,
+    order_count:numOrder,
   });
 });
 

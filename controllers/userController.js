@@ -1,8 +1,10 @@
 const User = require("../model/user");
+const Order =require("../model/order")
 const asyncHandler = require("express-async-handler");
 const { body, validationResult } = require("express-validator");
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
+const order = require("../model/order");
 
 exports.register_user_post = [
   // Validate and sanitize request body fields
@@ -74,3 +76,26 @@ exports.user_list = asyncHandler(async (req, res, next) => {
 
   res.render("layout", responseData);
 });
+
+
+exports.user_detail = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.params.id).exec();
+  const order = await Order.find({"user":user._id}).exec()
+  if (user === null) {
+    const err = new Error("user not found");
+    err.status = 404;
+    next(err);
+  }
+  if (order === null) {
+    const err = new Error("order not found");
+    err.status = 404;
+    next(err);
+  }
+
+  res.render("layout", {
+    content: "user_detail",
+    user: user,
+    orders:order
+  });
+});
+

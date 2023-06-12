@@ -1,0 +1,22 @@
+<div class="container">
+  <div class="indexDiv">
+    <h1><%= order._id %></h1>
+    <div class="detail">
+      <p>placed by: <a href="<%= user.url %>"><%= order.user._id %></a></p>
+      <p>address: <%= order.addressAndContact.appartment %>, <%= order.addressAndContact.city %>, <%= order.addressAndContact.postalCode %></p>
+      <p>contact: <%= order.addressAndContact.phone %></p>
+      <p>status: <%= order.status %></p>
+      <p>payment status: <%= order.paymentStatus %></p>
+      <div class="items">
+        <h3 class="text-dark">Cart Items</h3>
+        <ol class="list-group list-group-flush">
+          <% order.cart.forEach((item) => { %>
+            <li class="list-group-item">
+              <a class="text-decoration-none" href="/catalog/product/<%= item.id %>"><%= item.id %></a>
+            </li>
+          <% }) %>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
