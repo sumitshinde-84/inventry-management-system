@@ -84,9 +84,18 @@ const limiter = RateLimit({
 });
 
 const allowlist = ['https://inventryapp-production.up.railway.app', 'https://sumitshinde-84.github.io']
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowlist.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
 
-app.use(limiter);
 app.use(cors(corsOptions));
+app.use(limiter);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use("/catalog", catalogRouter)
