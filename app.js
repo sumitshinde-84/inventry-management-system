@@ -83,7 +83,7 @@ const limiter = RateLimit({
   max: 20,
 });
 
-const allowlist = ['https://inventryapp-production.up.railway.app', 'https://sumitshinde-84.github.io']
+const allowlist = ['https://inventryapp-production.up.railway.app/catalog', 'https://sumitshinde-84.github.io']
 const corsOptions = {
   origin: (origin, callback) => {
     if (allowlist.includes(origin)) {
