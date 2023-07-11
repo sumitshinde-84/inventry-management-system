@@ -84,17 +84,17 @@ const limiter = RateLimit({
 });
 
 const allowlist = ['https://inventryapp-production.up.railway.app/catalog', 'https://sumitshinde-84.github.io']
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (allowlist.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-};
+let corsOptionsDelegate = function (req, callback) {
+  let corsOptions;
+  if (allowlist.indexOf(req.header('Origin')) !== -1) {
+    corsOptions = { origin: true }
+  } else {
+    corsOptions = { origin: false } 
+  }
+  callback(null, corsOptions) 
+}
 
-app.use(cors(corsOptions));
+app.use(cors(corsOptionsDelegate));
 app.use(limiter);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
