@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const maxmind = require('maxmind');
 const mongoose = require("mongoose");
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -82,6 +83,35 @@ const limiter = RateLimit({
   windowMs: 1 * 60 * 1000,
   max: 20,
 });
+
+
+const path = require('path');
+
+
+const geoipDatabasePath = path.join(__dirname, 'GeoIP2-City.mmdb');
+
+
+const blockThaneVisitors = async (req, res, next) => {
+  const clientIP = req.ip; 
+
+  try {
+    const geoData = await maxmind.open(geoipDatabasePath);
+    const cityInfo = geoData.city(clientIP);
+
+    if (cityInfo && cityInfo.city && cityInfo.city.names && cityInfo.city.names.en === 'Thane') {
+      
+      return res.status(403).send('Access forbidden');
+    }
+  } catch (error) {
+    console.error('Error retrieving geolocation data:', error);
+  }
+
+  
+  next();
+};
+
+// Apply the Thane blocking middleware to all routes
+app.use(blockThaneVisitors);
 
 const allowlist = ['https://inventryapp-production.up.railway.app/catalog', 'https://sumitshinde-84.github.io']
 let corsOptionsDelegate = function (req, callback) {
