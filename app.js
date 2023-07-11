@@ -83,8 +83,10 @@ const limiter = RateLimit({
   max: 20,
 });
 
+const allowlist = ['https://inventryapp-production.up.railway.app', 'https://sumitshinde-84.github.io']
+
 app.use(limiter);
-app.use(cors()); 
+app.use(cors(corsOptions));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use("/catalog", catalogRouter)
